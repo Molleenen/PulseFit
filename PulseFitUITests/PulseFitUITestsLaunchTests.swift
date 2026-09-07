@@ -1,14 +1,6 @@
-//
-//  PulseFitUITestsLaunchTests.swift
-//  PulseFitUITests
-//
-//  Created by Sebastian Wojciechowski on 07/09/2026.
-//
-
 import XCTest
 
 final class PulseFitUITestsLaunchTests: XCTestCase {
-
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }
@@ -18,7 +10,7 @@ final class PulseFitUITestsLaunchTests: XCTestCase {
     }
 
     @MainActor
-    func testLaunch() throws {
+    func testLaunch() {
         let app = XCUIApplication()
         app.launch()
 

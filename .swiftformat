@@ -1,0 +1,22 @@
+# SwiftFormat Configuration for PulseFit
+
+# Language & Layout Options
+--swiftversion 6.0
+--indent 4
+--maxwidth 140
+--allman false
+--emptybraces no-space
+
+# Excluded Paths
+--exclude DerivedData,.build
+
+# Explicit Self Usage
+--self remove
+
+# Syntax Formatting Rules
+--commas inline
+--stripunusedargs closure-only
+--typeblanklines remove
+
+# Header Handling
+--header strip

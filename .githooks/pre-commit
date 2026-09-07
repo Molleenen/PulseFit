@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# 1. Format Staged Swift Files
+if command -v swiftformat >/dev/null 2>&1; then
+  echo "🧹 Running SwiftFormat on staged files..."
+  
+  # Collect staged files into a list
+  STAGED_FILES=$(git diff --cached --name-only --diff-filter=d | grep '\.swift$')
+  
+  if [ -n "$STAGED_FILES" ]; then
+    # Run SwiftFormat once across all staged files
+    echo "$STAGED_FILES" | xargs swiftformat
+    echo "$STAGED_FILES" | xargs git add
+    echo "✨ Staged Swift files formatted and re-staged."
+  fi
+else
+  echo "⚠️ SwiftFormat is not installed. Skipping auto-formatting."
+fi
+
+# 2. Lint Staged / Project Code
+if command -v swiftlint >/dev/null 2>&1; then
+  echo "🔍 Running SwiftLint validation..."
+  swiftlint lint --quiet --strict
+  
+  if [ $? -ne 0 ]; then
+    echo "❌ SwiftLint checks failed. Resolve errors before committing."
+    exit 1
+  fi
+else
+  echo "⚠️ SwiftLint is not installed. Skipping linting."
+fi
+
+echo "✅ All pre-commit checks passed!"

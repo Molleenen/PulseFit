@@ -1,18 +1,11 @@
-//
-//  PulseFitApp.swift
-//  PulseFit
-//
-//  Created by Sebastian Wojciechowski on 07/09/2026.
-//
-
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct PulseFitApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Item.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

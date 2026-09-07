@@ -1,12 +1,5 @@
-//
-//  ContentView.swift
-//  PulseFit
-//
-//  Created by Sebastian Wojciechowski on 07/09/2026.
-//
-
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext

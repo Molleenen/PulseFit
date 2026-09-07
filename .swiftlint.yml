@@ -1,0 +1,60 @@
+# Paths to ignore completely
+excluded:
+  - DerivedData
+  - .build
+
+# Rules disabled by default
+disabled_rules:
+  - file_header               # Handled by IDETemplateMacros.plist
+  - static_over_final_class   # Prevents conflicts with XCTest override methods
+
+# Recommended opt-in rules for code quality and modern Swift safety
+opt_in_rules:
+  - array_init
+  - closure_end_indentation
+  - closure_spacing
+  - collection_alignment
+  - empty_count
+  - empty_string
+  - fatal_error_message
+  - first_where
+  - modifier_order
+  - legacy_random
+  - number_separator
+  - sorted_imports
+  - unneeded_parentheses_in_closure_argument
+  - vertical_parameter_alignment_on_call
+
+# Custom rule configurations
+
+# Adjust line length for modern SwiftUI DSL (modifier chains, previews)
+line_length:
+  warning: 140
+  error: 180
+  ignores_urls: true
+  ignores_comments: true
+
+# Keep functions manageable without flagging standard setup methods
+function_body_length:
+  warning: 60
+  error: 100
+
+# Keep type implementations modular
+type_body_length:
+  warning: 300
+  error: 500
+
+# Identifier naming thresholds
+identifier_name:
+  min_length:
+    warning: 2
+  max_length:
+    warning: 40
+    error: 60
+  allowed_symbols:
+    - "_"
+  excluded:
+    - id
+    - x
+    - y
+    - z
