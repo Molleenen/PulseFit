@@ -1,8 +1,5 @@
-# Xcode user-specific settings
-*.xcodeproj/project.xcworkspace/xcuserdata/
-*.xcodeproj/xcuserdata/
-*.xcworkspace/xcuserdata/
-*.moved-aside
+# Xcode User & User-Specific Data
+xcuserdata/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -12,9 +9,25 @@
 *.perspectivev3
 !default.perspectivev3
 
-# Build artifacts
+# Build Artifacts & Caches
+build/
 DerivedData/
-.build/
+*.app
+*.framework
+*.dSYM
+.swiftlint-cache
 
-# OS-generated files
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+
+# Swift Playgrounds / Workspace Local Data
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# macOS System Files
 .DS_Store
+*.swp
+*~
