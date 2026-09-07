@@ -1,0 +1,53 @@
+name: PulseFit CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-build:
+    name: Lint & Build (iOS)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Cache Homebrew Packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/Homebrew
+            /usr/local/Homebrew
+          key: ${{ runner.os }}-brew-${{ hashFiles('setup.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-brew-
+
+      - name: Install Tooling
+        run: |
+          if ! command -v swiftlint &> /dev/null; then brew install swiftlint; fi
+          if ! command -v swiftformat &> /dev/null; then brew install swiftformat; fi
+
+      - name: Run SwiftFormat Check
+        run: swiftformat --lint .
+
+      - name: Run SwiftLint
+        run: swiftlint lint --strict
+
+      - name: Build & Test (iOS Simulator)
+        run: |
+          xcodebuild test \
+            -scheme PulseFit \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -enableCodeCoverage YES \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
