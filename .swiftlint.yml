@@ -58,3 +58,11 @@ identifier_name:
     - x
     - y
     - z
+
+# Indentation style
+indentation:
+  style: tabs
+
+# Number separator configuration
+number_separator:
+  minimum_length: 4

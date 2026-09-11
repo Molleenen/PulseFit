@@ -18,5 +18,14 @@
 --stripunusedargs closure-only
 --typeblanklines remove
 
-# Header Handling
---header strip
+# Enforce tabs for indentation
+--indent tab
+
+# Prevent spaces in multiline comment blocks
+--comments ignore
+
+# Disable the number formatting rule (preserves underscores like 3_600)
+--disable numberFormatting
+
+# Disable operator spacing rules if you don't want SwiftFormat touching spaces around operators
+--disable spaceAroundOperators
