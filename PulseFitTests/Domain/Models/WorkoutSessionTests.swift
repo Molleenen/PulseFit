@@ -65,4 +65,34 @@ struct WorkoutSessionTests {
 		#expect(try context.fetch(FetchDescriptor<ExerciseLog>()).isEmpty)
 		#expect(try context.fetch(FetchDescriptor<WorkoutSet>()).isEmpty)
 	}
+
+	// MARK: - Formatting & Presentation Extension Tests
+
+	@Test("sortedMuscleGroups extracts unique sorted muscle groups")
+	func extractUniqueSortedMuscleGroups() {
+		let session = WorkoutSession(name: "Full Body")
+		let log1 = ExerciseLog(exerciseName: "Bench Press", muscleGroup: "Chest")
+		let log2 = ExerciseLog(exerciseName: "Incline Press", muscleGroup: "Chest")
+		let log3 = ExerciseLog(exerciseName: "Squat", muscleGroup: "Legs")
+
+		session.exerciseLogs = [log1, log2, log3]
+
+		#expect(session.sortedMuscleGroups == ["Chest", "Legs"])
+	}
+
+	@Test("formattedDuration displays hours and minutes when duration exceeds 1 hour")
+	func formatSessionDurationHoursAndMinutes() {
+		let startDate = Date()
+		let endDate = startDate.addingTimeInterval(4_500) // 75 minutes
+		let session = WorkoutSession(name: "Push Day", startDate: startDate, endDate: endDate)
+
+		#expect(session.formattedDuration == "1h 15m")
+	}
+
+	@Test("formattedDuration displays 'In Progress' when duration is nil")
+	func formatSessionDurationNil() {
+		let session = WorkoutSession(name: "Active Session", startDate: Date(), endDate: nil)
+
+		#expect(session.formattedDuration == "In Progress")
+	}
 }
