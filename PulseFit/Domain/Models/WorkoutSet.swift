@@ -66,3 +66,12 @@ final class WorkoutSet {
 		self.isCompleted = isCompleted
 	}
 }
+
+extension WorkoutSet {
+	/// Formats weight without trailing decimal zeroes for whole numbers (e.g., "100" vs "102.5").
+	var formattedWeight: String {
+		weight.truncatingRemainder(dividingBy: 1) == 0
+			? String(format: "%.0f", weight)
+			: String(format: "%.1f", weight)
+	}
+}

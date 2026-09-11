@@ -1,8 +1,10 @@
 import SwiftData
 import SwiftUI
 
-/// Root view displaying all persisted workout sessions.
+/// Root view displaying all persisted workout sessions with date grouping and swipe deletion.
 struct WorkoutListView: View {
+	@Environment(\.modelContext) private var modelContext
+
 	@Query(sort: \WorkoutSession.startDate, order: .reverse)
 	private var sessions: [WorkoutSession]
 
@@ -15,28 +17,26 @@ struct WorkoutListView: View {
 					description: Text("Start a new workout session to track your progress.")
 				)
 			} else {
-				ForEach(sessions) { session in
-					VStack(alignment: .leading, spacing: 4) {
-						Text(session.name)
-							.font(.headline)
-
-						HStack {
-							Text(session.startDate.formatted(date: .abbreviated, time: .shortened))
-								.font(.caption)
-								.foregroundStyle(.secondary)
-
-							Spacer()
-
-							Text("\(session.exerciseLogs.count) exercises")
-								.font(.caption)
-								.foregroundStyle(.secondary)
+				ForEach(sortedSectionKeys, id: \.self) { sectionTitle in
+					Section(header: Text(sectionTitle)) {
+						if let sectionSessions = groupedSessions[sectionTitle] {
+							ForEach(sectionSessions) { session in
+								NavigationLink(value: session) {
+									WorkoutCardView(session: session)
+								}
+							}
+							.onDelete { indexSet in
+								deleteSessions(in: sectionSessions, at: indexSet)
+							}
 						}
 					}
-					.padding(.vertical, 4)
 				}
 			}
 		}
 		.navigationTitle("Workouts")
+		.navigationDestination(for: WorkoutSession.self) { session in
+			WorkoutDetailView(session: session)
+		}
 		.toolbar {
 			Button(
 				action: {},
@@ -46,9 +46,40 @@ struct WorkoutListView: View {
 			)
 		}
 	}
+
+	// MARK: - Section Grouping
+
+	private var groupedSessions: [String: [WorkoutSession]] {
+		let calendar = Calendar.current
+		return Dictionary(grouping: sessions) { session in
+			if calendar.isDateInToday(session.startDate) {
+				"Today"
+			} else if calendar.isDateInYesterday(session.startDate) {
+				"Yesterday"
+			} else if calendar.isDate(session.startDate, equalTo: Date(), toGranularity: .weekOfYear) {
+				"This Week"
+			} else {
+				"Earlier"
+			}
+		}
+	}
+
+	private var sortedSectionKeys: [String] {
+		let order = ["Today", "Yesterday", "This Week", "Earlier"]
+		return order.filter { groupedSessions.keys.contains($0) }
+	}
+
+	// MARK: - Actions
+
+	private func deleteSessions(in sectionSessions: [WorkoutSession], at indexSet: IndexSet) {
+		for index in indexSet {
+			let sessionToDelete = sectionSessions[index]
+			modelContext.delete(sessionToDelete)
+		}
+	}
 }
 
-#Preview {
+#Preview { @MainActor in
 	NavigationStack {
 		WorkoutListView()
 	}
