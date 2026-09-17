@@ -65,3 +65,27 @@ final class WorkoutSession {
 		self.exerciseLogs = exerciseLogs
 	}
 }
+
+extension WorkoutSession {
+	/// Calculates formatted duration string (e.g., "1h 15m", "45m", or "In Progress").
+	var formattedDuration: String {
+		guard let duration else {
+			return "In Progress"
+		}
+
+		let totalSeconds = Int(duration)
+		let minutes = (totalSeconds % 3_600) / 60
+		let hours = totalSeconds / 3_600
+
+		if hours > 0 {
+			return "\(hours)h \(minutes)m"
+		} else {
+			return "\(minutes)m"
+		}
+	}
+
+	/// Returns unique, sorted muscle group names targeted in this session.
+	var sortedMuscleGroups: [String] {
+		Array(Set(exerciseLogs.compactMap(\.muscleGroup))).sorted()
+	}
+}

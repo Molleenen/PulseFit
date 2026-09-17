@@ -3,20 +3,19 @@ import SwiftUI
 
 @main
 struct PulseFitApp: App {
-	/// The application-wide SwiftData container instance.
 	let container: ModelContainer
 
 	init() {
-		do {
-			let schema = Schema([
-				WorkoutSession.self,
-				ExerciseLog.self,
-				WorkoutSet.self
-			])
-			let configuration = ModelConfiguration(schema: schema)
-			container = try ModelContainer(for: schema, configurations: [configuration])
-		} catch {
-			fatalError("Failed to initialize SwiftData ModelContainer: \(error)")
+		if ProcessInfo.processInfo.arguments.contains("-enable-test-seed") {
+			// Use in-memory sample container during UI test execution
+			container = PreviewContainer.sample
+		} else {
+			// Standard production container
+			do {
+				container = try ModelContainer(for: WorkoutSession.self)
+			} catch {
+				fatalError("Failed to initialize production ModelContainer: \(error)")
+			}
 		}
 	}
 
